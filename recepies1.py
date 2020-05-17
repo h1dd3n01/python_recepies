@@ -21,24 +21,26 @@ class LazyConnection:
         self.sock = None
 
     '''
-        ---------------------- Explanation ----------------------
+            ---------------------- Explanation ----------------------
     
     The main reason of this class is it opens a socket connection and closes it.
     By default it does nothing. The connection is made on demand with the use of
     context manager or with keyword, for example:
+    
+            ----------------------------------------------------------
     '''
 
     # if __name__ == '__main__':
-    # conn = LazyConnection(('www.python.org',80))
-    # # Connection is still closed
-    # with conn as c:
-    #     # __enter()__ was called, connection opened
-    #     c.send(b'GET /index.html HTTP/1.0\r\n')
-    #     c.send(b'Host: www.python.org\r\n')
-    #     c.send(b'\r\n')
-    #     resp = b''.join(iter(partial(c.recv, 8192), b''))
-    #     print(resp)
-    #     # conn.__exit__() connection closed
+    #     conn = LazyConnection(('www.python.org', 80))
+    #     # Connection is still closed
+    #     with conn as c:
+    #         # __enter()__ was called, connection opened
+    #         c.send(b'GET /index.html HTTP/1.0\r\n')
+    #         c.send(b'Host: www.python.org\r\n')
+    #         c.send(b'\r\n')
+    #         resp = b''.join(iter(partial(c.recv, 8192), b''))
+    #         print(resp)
+    #         # conn.__exit__() connection closed
 
     '''
     The main reason behind building a context manager is that you write code that is 
@@ -72,32 +74,34 @@ class LazyConnection2:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self.connections.pop().close()
 
-    # if __name__ == '__main__':
-    #     conn = LazyConnection2(('www.python.org', 80))
-    #     with conn as conn1:
-    #         conn1.send(b'GET /index.html HTTP/1.0\r\n')
-    #         conn1.send(b'Host: www.python.org\r\n')
-    #         conn1.send(b'\r\n')
-    #         resp = b''.join(iter(partial(conn1.recv, 8192), b''))
-    #         print('First response {}'.format(resp))
-    #         with conn as conn2:
-    #             conn2.send(b'GET /index.html HTTP/1.0\r\n')
-    #             conn2.send(b'Host: www.python.org\r\n')
-    #             conn2.send(b'\r\n')
-    #             resp = b''.join(iter(partial(conn2.recv, 8192), b''))
-    #             print('Second response {}'.format(resp))
 
-    '''
-    Context managers are used more often in programs that need to control resources like files, network connections
-    or blocking. The key point of these resources is that they need to be closed or freed in order to work correctly.
-    '''
+# if __name__ == '__main__':
+#     conn = LazyConnection2(('www.python.org', 80))
+#     with conn as conn1:
+#         conn1.send(b'GET /index.html HTTP/1.0\r\n')
+#         conn1.send(b'Host: www.python.org\r\n')
+#         conn1.send(b'\r\n')
+#         resp = b''.join(iter(partial(conn1.recv, 8192), b''))
+#         print('First response {}'.format(resp))
+#         print('-'*10)
+#         with conn as conn2:
+#             conn2.send(b'GET /index.html HTTP/1.0\r\n')
+#             conn2.send(b'Host: www.python.org\r\n')
+#             conn2.send(b'\r\n')
+#             resp = b''.join(iter(partial(conn2.recv, 8192), b''))
+#             print('Second response {}'.format(resp))
 
-    # ------------------------------------------ Part 2 ------------------------------------------------------
+'''
+Context managers are used more often in programs that need to control resources like files, network connections
+or blocking. The key point of these resources is that they need to be closed or freed in order to work correctly.
+'''
 
-    '''
-        If you have million of objects that act as simple data structures, you can use __slots__ to significantly
-        decrease the memory usage of your programs.    
-    '''
+# ------------------------------------------ Part 2 ------------------------------------------------------
+
+'''
+    If you have million of objects that act as simple data structures, you can use __slots__ to significantly
+    decrease the memory usage of your programs.    
+'''
 
 
 class Date:
@@ -124,11 +128,13 @@ class Date:
 
     # class Structure:
     #     _fields = []
+    #
     #     def __init__(self, *args):
     #         if len(args) != len(self._fields):
     #             raise TypeError('Expected {} of arguments'.format(len(self._fields)))
     #         for name, value in zip(self._fields, args):
     #             setattr(self, name, value)
+    #
     #
     # if __name__ == '__main__':
     #     class Person(Structure):
@@ -145,8 +151,9 @@ class Date:
 
     # class Structure:
     #     _fields = []
-    #     def __init__(self, *args,**kwargs):
-    #         if len(args) != len(self._fields):
+    #
+    #     def __init__(self, *args, **kwargs):
+    #         if len(args) != len(self._fields) and (len(args) + len(kwargs) != len(self._fields)):
     #             raise TypeError('Expected {} of arguments'.format(len(self._fields)))
     #         for name, value in zip(self._fields, args):
     #             setattr(self, name, value)
@@ -154,44 +161,50 @@ class Date:
     #         for name in self._fields[len(args):]:
     #             setattr(self, name, kwargs.pop(name))
     #
-    #         # Check leftover arguments
+    #             # Check leftover arguments
     #         if kwargs:
     #             raise TypeError('Invalid argument(s): {}'.format(','.join(kwargs)))
-    #
-    #
+
     # if __name__ == '__main__':
     #     class Person(Structure):
     #         _fields = ['first_name', 'last_name', 'address']
-    #
-    #     p1 = Person('Andrew', 'Anderson', 'someStreet 5-43')
-    #     p2 = Person('Andrew', 'Anderson', address='someStreet 5-43')
-    #     p3 = Person('Andrew', last_name='Anderson', address='someStreet 5-43')
+
+    # p1 = Person('Andrew', 'Anderson', 'someStreet 5-43')
+    # p2 = Person('Andrew', 'Anderson', address='someStreet 5-43')
+    # p3 = Person('Andrew', last_name='Anderson', address='someStreet 5-43')
+    # p3 = Person('Andrew', last_name='Anderson', address='somestreet 5')
+    # print(p2.address)
 
     '''
         Another way is to use keyword arguments as a resource of adding additional attributes that weren't defined
-        in _slots[]
+        in _fields[]
     '''
 
     # class Structure:
     #     _fields = []
+    #
     #     def __init__(self, *args, **kwargs):
-    #         if len(args) != len(self._fields):
+    #         if len(args) != len(self._fields) and (len(args) + len(kwargs) != len(self._fields)):
     #             raise TypeError('Expected {} of arguments'.format(len(self._fields)))
     #
     #         for name, value in zip(self._fields, args):
     #             setattr(self, name, value)
-    #         # if extra_args, add them
+    #             # if extra_args, add them
     #         extra_args = kwargs.keys() - self._fields
     #         for name in extra_args:
     #             setattr(self, name, kwargs.pop(name))
     #         if kwargs:
     #             raise TypeError('Duplicate values for {}'.format(', '.join(kwargs)))
     #
+    #
     # if __name__ == '__main__':
     #     class Stock(Structure):
     #         _fields = ['name', 'shares', 'price']
+    #
+    #
     #     s1 = Stock('ACME', 50, 91.1)
     #     s2 = Stock('ACME', 50, 91.1, date='8/2/2012')
+    #     print(s2.name)
 
     # ------------------------------------------ Part 4 ------------------------------------------------------
 
@@ -293,7 +306,7 @@ class SizedString(String, MaxSized):
         There are a few other ways to make specification limit for a class.
         One of them is to use decorator class
     '''
-
+    #
     # def check_attribute(**kwargs):
     #     def decorate(cls):
     #         for k, v in kwargs.items():
@@ -304,8 +317,8 @@ class SizedString(String, MaxSized):
     #                 setattr(cls, k, v(k))
     #         return cls
     #     return decorate
-    #
-    #
+    # #
+    # #
     # @check_attribute(name=SizedString(size=8),
     #                  shares=UnsignedInteger,
     #                  price=UnsignedFloat)
@@ -320,24 +333,23 @@ class SizedString(String, MaxSized):
         Another way is to use metaclass
     '''
 
-
-class CheckedMeta(type):
-    def __new__(cls, clsname, bases, methods):
-        for key, value in methods.items():
-            if isinstance(value, Descriptor):
-                value.name = key
-        return type.__new__(cls, clsname, bases, methods)
-
-
-class Stock(metaclass=CheckedMeta):
-    name = SizedString(size=8)
-    shares = UnsignedInteger()
-    price = UnsignedFloat()
-
-    def __init__(self, name, shares, price):
-        self.name = name
-        self.shares = shares
-        self.price = price
+    # class CheckedMeta(type):
+    #     def __new__(cls, clsname, bases, methods):
+    #         for key, value in methods.items():
+    #             if isinstance(value, Descriptor):
+    #                 value.name = key
+    #         return type.__new__(cls, clsname, bases, methods)
+    #
+    #
+    # class Stock(metaclass=CheckedMeta):
+    #     name = SizedString(size=8)
+    #     shares = UnsignedInteger()
+    #     price = UnsignedFloat()
+    #
+    #     def __init__(self, name, shares, price):
+    #         self.name = name
+    #         self.shares = shares
+    #         self.price = price
 
     '''
         In Descriptors base class is a method __set__(), but not __get__(). If
@@ -360,13 +372,13 @@ class Stock(metaclass=CheckedMeta):
     #
     # class Item(Iterable):
     #     pass
-
+    #
     # if __name__ == '__main__':
     #     c = Item()
     # Print error, can't instantiate class with iter
 
     '''
-        Of course, if you want to make your class iterable you can siply override __iter__(). Lets take a look at
+        Of course, if you want to make your class iterable you can simply override __iter__(). Lets take a look at
         another example
     '''
 
@@ -392,7 +404,7 @@ class SortedItem(Sequence):
 if __name__ == '__main__':
     items = SortedItem([10, 43, 3])
     print(list(items))
-    print('-'*10)
+    print('-' * 10)
     print(items[0])
     print('-' * 10)
     print(items[-1])
@@ -415,21 +427,3 @@ if __name__ == '__main__':
         recipe gives a comfortable support of element sorting inside a list. Since bisect.insort() inserts
         elements inside of a list, the sequence stays sorted.
     '''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
