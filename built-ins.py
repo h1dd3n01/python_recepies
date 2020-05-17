@@ -4,15 +4,15 @@ def counter():
 
     c = Counter(list)
     # ---------------- Find all duplicates ---------------
-    # for k ,v in c.items():
-    #     if v > 1:
-    #         print('Found {} "{}" elements'.format(v ,k))
+    for k ,v in c.items():
+        if v > 1:
+            print('Found {} "{}" elements'.format(v ,k))
 
     # ---------------- List unique elements --------------
-    # print(sorted(c))
+    print(sorted(c))
 
     # ---------------- Print most common -----------------
-    # print(c.most_common(2))
+    print(c.most_common(2))
 
 
 def sort_dict():
@@ -36,13 +36,15 @@ def sort_dict():
 
     # ------------------------------------------------------------------------------------------
 
-    rows_by_first_name = sorted(rows, key=itemgetter('first_name'))
-    rows_by_last_name = sorted(rows, key=itemgetter('last_name'))
-    rows_by_address = sorted(rows, key=itemgetter('address'))
+    # rows_by_first_name = sorted(rows, key=itemgetter('first_name'))
+    # rows_by_last_name = sorted(rows, key=itemgetter('last_name'))
+    # rows_by_address = sorted(rows, key=itemgetter('address'))
     rows_by_first_last_name = sorted(rows, key=itemgetter('first_name', 'last_name'))
     # print(rows_by_first_name)
     # print(rows_by_last_name)
-    print(rows_by_address)
+    # print(rows_by_address)
+    print(rows_by_first_last_name)
+
 
 
 class User:
@@ -92,20 +94,21 @@ def group_items():
     # that have similar date.
 
     # First sort by needed field
-    print('Before')
-    print('-' * 10)
-    print(rows)
-    print('-' * 10)
-    rows.sort(key=itemgetter('date'))
-    print('After')
-    print('-' * 10)
-    print(rows)
-    print('-' * 10)
+    # print('Before')
+    # print('-' * 10)
+    # print(rows)
+    # print('-' * 10)
+    # rows.sort(key=itemgetter('date'))
+    # print('After')
+    # print('-' * 10)
+    # print(rows)
+    # print('-' * 10)
     # Iterate by groups
     for date, items in groupby(rows, key=itemgetter('date')):
         print(date)
         for i in items:
             print('', i)
+
 
 
 def group_items_second_example():
@@ -133,14 +136,17 @@ def group_items_second_example():
         temp_dict = dict(zip(['dept', 'sku'], key))
         temp_dict['qty'] = sum(item['qty'] for item in group)
         aggregation_result.append(temp_dict)
-        # print(i for i in aggregation_result)
+    # for i in aggregation_result:
+    #     print(i)
     # --------------------- Average ------------------
     for key, group in groupby(sorted(input, key=grouped), grouped):
         temp_dict = dict(zip(['depth', 'sku'], key))
         temp_list = [item['qty'] for item in group]
         temp_dict['avg'] = sum(temp_list) / len(temp_list)
         average_result.append(temp_dict)
-        # print(i for i in temp_dict)
+
+    for i in average_result:
+        print(i)
 
 
 def chain_dict():
@@ -159,13 +165,16 @@ def chain_dict():
             print('found third')
             print(c[i])
 
+# if __name__ == '__main__':
+#     chain_dict()
+
 
 def text_search():
     # ------------------- Usecase --------------------------
     # you need to check if a certaing text or file starts or ends with a specific character
     filename = 'spam.txt'
     print('Does filename end with text = {}'.format(filename.endswith('.txt')))
-    print('Does filename start with text = {}'.format(filename.startswith('file:')))
+    print('Does filename start with file: = {}'.format(filename.startswith('file:')))
     url = 'http://python.org'
     print('Does url start with http = {}'.format(url.startswith('http')))
 
@@ -182,13 +191,18 @@ def round_values():
     print('Basevalue is 1.53, rounded is {}'.format(round(1.53)))
 
 
+
 def partial():
     from functools import partial
+
     # -------------------------- Usecase --------------------------
+
     # You have a callable that you want to use, but it accepts too many arguments
     # and throws a exception. If you need to limit the amount of arguments of your callable
     # use functools.partial. Partial allows you to declare a fixed amount of arguments
     # that a callable can recieve
+
+
     def spam(a, b, c, d):
         print(a, b, c, d)
 
@@ -198,13 +212,9 @@ def partial():
     s1(2, 3, 4)
     s2(4, 5, 5)
     s3(5)
-    print(s1(2, 3, 4))
-    print(s2(1, 2, 3))
-    print(s3(3))
 
-
-if __name__ == '__main__':
-    pass
+# if __name__ == '__main__':
+#     pass
     # counter()             1
     # print(sort_dict())    2
     # sort_object()         3
