@@ -2,23 +2,23 @@ from socket import socket, AF_INET, SOCK_STREAM
 from functools import partial
 
 
-class LazyConnection:
-    def __init__(self, address, family=AF_INET, type=SOCK_STREAM):
-        self.address = address
-        self.family = AF_INET
-        self.type = SOCK_STREAM
-        self.sock = None
-
-    def __enter__(self):
-        if self.sock is not None:
-            raise RuntimeError('Already connected')
-        self.sock = socket(self.family, self.type)
-        self.sock.connect(self.address)
-        return self.sock
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.sock.close()
-        self.sock = None
+# class LazyConnection:
+#     def __init__(self, address, family=AF_INET, type=SOCK_STREAM):
+#         self.address = address
+#         self.family = AF_INET
+#         self.type = SOCK_STREAM
+#         self.sock = None
+#
+#     def __enter__(self):
+#         if self.sock is not None:
+#             raise RuntimeError('Already connected')
+#         self.sock = socket(self.family, self.type)
+#         self.sock.connect(self.address)
+#         return self.sock
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         self.sock.close()
+#         self.sock = None
 
     '''
             ---------------------- Explanation ----------------------
@@ -40,7 +40,7 @@ class LazyConnection:
     #         c.send(b'\r\n')
     #         resp = b''.join(iter(partial(c.recv, 8192), b''))
     #         print(resp)
-    #         # conn.__exit__() connection closed
+    # conn.__exit__() connection closed
 
     '''
     The main reason behind building a context manager is that you write code that is 
@@ -58,21 +58,21 @@ class LazyConnection:
     '''
 
 
-class LazyConnection2:
-    def __init__(self, address, family=AF_INET, type=SOCK_STREAM):
-        self.address = address
-        self.family = AF_INET
-        self.type = SOCK_STREAM
-        self.connections = []
-
-    def __enter__(self):
-        sock = socket(self.family, self.type)
-        sock.connect(self.address)
-        self.connections.append(sock)
-        return sock
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self.connections.pop().close()
+# class LazyConnection2:
+#     def __init__(self, address, family=AF_INET, type=SOCK_STREAM):
+#         self.address = address
+#         self.family = AF_INET
+#         self.type = SOCK_STREAM
+#         self.connections = []
+#
+#     def __enter__(self):
+#         sock = socket(self.family, self.type)
+#         sock.connect(self.address)
+#         self.connections.append(sock)
+#         return sock
+#
+#     def __exit__(self, exc_type, exc_val, exc_tb):
+#         self.connections.pop().close()
 
 
 # if __name__ == '__main__':
@@ -83,7 +83,7 @@ class LazyConnection2:
 #         conn1.send(b'\r\n')
 #         resp = b''.join(iter(partial(conn1.recv, 8192), b''))
 #         print('First response {}'.format(resp))
-#         print('-'*10)
+#         print('-' * 10)
 #         with conn as conn2:
 #             conn2.send(b'GET /index.html HTTP/1.0\r\n')
 #             conn2.send(b'Host: www.python.org\r\n')
@@ -103,14 +103,14 @@ or blocking. The key point of these resources is that they need to be closed or 
     decrease the memory usage of your programs.    
 '''
 
-
-class Date:
-    __slots__ = ['year', 'month', 'day']
-
-    def __init__(self, year, month, day):
-        self.year = year
-        self.month = month
-        self.day = day
+#
+# class Date:
+#     __slots__ = ['year', 'month', 'day']
+#
+#     def __init__(self, year, month, day):
+#         self.year = year
+#         self.month = month
+#         self.day = day
 
     '''
         When you use slots, instead of converting each element into a dictionary, python stores them inside a 
@@ -161,19 +161,20 @@ class Date:
     #         for name in self._fields[len(args):]:
     #             setattr(self, name, kwargs.pop(name))
     #
-    #             # Check leftover arguments
+    #         # Check leftover arguments
     #         if kwargs:
     #             raise TypeError('Invalid argument(s): {}'.format(','.join(kwargs)))
-
+    #
+    #
     # if __name__ == '__main__':
     #     class Person(Structure):
     #         _fields = ['first_name', 'last_name', 'address']
-
-    # p1 = Person('Andrew', 'Anderson', 'someStreet 5-43')
-    # p2 = Person('Andrew', 'Anderson', address='someStreet 5-43')
-    # p3 = Person('Andrew', last_name='Anderson', address='someStreet 5-43')
-    # p3 = Person('Andrew', last_name='Anderson', address='somestreet 5')
-    # print(p2.address)
+    #
+    #
+    #     p1 = Person('Andrew', 'Anderson', 'someStreet 5-43')
+    #     p2 = Person('Andrew', 'Anderson', address='someStreet 5-43')
+    #     p3 = Person('Andrew', last_name='Anderson', address='someStreet 5-43')
+    #     p3 = Person('Andrew', last_name='Anderson', address='somestreet 5')
 
     '''
         Another way is to use keyword arguments as a resource of adding additional attributes that weren't defined
@@ -204,7 +205,7 @@ class Date:
     #
     #     s1 = Stock('ACME', 50, 91.1)
     #     s2 = Stock('ACME', 50, 91.1, date='8/2/2012')
-    #     print(s2.name)
+    #     print(s1.price)
 
     # ------------------------------------------ Part 4 ------------------------------------------------------
 
@@ -215,98 +216,94 @@ class Date:
         customize attribute setup for each attribute.
     '''
 
-
 #
-class Descriptor:
-    def __init__(self, name=None, **opts):
-        self.name = name
-        for key, value in opts.items():
-            setattr(self, key, value)
-
-    def __set__(self, instance, value):
-        instance.__dict__[self.name] = value
+# class Descriptor:
+#     def __init__(self, name=None, **opts):
+#         self.name = name
+#         for key, value in opts.items():
+#             setattr(self, key, value)
+#
+#     def __set__(self, instance, value):
+#         instance.__dict__[self.name] = value
 
 
 # Decorator for type checking
-class Typed(Descriptor):
-    expected_type = type(None)
-
-    def __set__(self, instance, value):
-        if not isinstance(value, self.expected_type):
-            raise TypeError('Expected type {}'.format(self.expected_type))
-        super(Typed, self).__set__(instance, value)
-
-
+# class Typed(Descriptor):
+#     expected_type = type(None)
+#
+#     def __set__(self, instance, value):
+#         if not isinstance(value, self.expected_type):
+#             raise TypeError('Expected type {}'.format(self.expected_type))
+#         super(Typed, self).__set__(instance, value)
+#
+#
+# # # Decorator for type checking
+# class Unsigned(Descriptor):
+#     def __set__(self, instance, value):
+#         if value < 0:
+#             raise ValueError('Expectec >= 0')
+#         super().__set__(instance, value)
+#
+#
 # # Decorator for type checking
-class Unsigned(Descriptor):
-    def __set__(self, instance, value):
-        if value < 0:
-            raise ValueError('Expectec >= 0')
-        super().__set__(instance, value)
-
-
-# Decorator for type checking
-class MaxSized(Descriptor):
-    def __init__(self, name=None, **opts):
-        if 'size' not in opts:
-            raise ValueError('Expected size option')
-        super().__init__(name, **opts)
-
-    def __set__(self, instance, value):
-        if len(value) >= self.size:
-            raise ValueError('size must be < ' + str(self.size))
-        super().__set__(instance, value)
-
-    '''
-        These classes should be looked as basic building blocks from which you create your data model or type system
-    '''
-
-
+# class MaxSized(Descriptor):
+#     def __init__(self, name=None, **opts):
+#         if 'size' not in opts:
+#             raise ValueError('Expected size option')
+#         super().__init__(name, **opts)
 #
-class Integer(Typed):
-    expected_type = int
-
-
-class UnsignedInteger(Integer, Unsigned):
-    pass
-
-
-class Float(Typed):
-    expected_type = float
-
-
-class UnsignedFloat(Float, Unsigned):
-    pass
-
-
-class String(Typed):
-    expected_type = str
-
-
-class SizedString(String, MaxSized):
-    pass
+#     def __set__(self, instance, value):
+#         if len(value) >= self.size:
+#             raise ValueError('size must be < ' + str(self.size))
+#         super().__set__(instance, value)
+#
+#     '''
+#         These classes should be looked as basic building blocks from which you create your data model or type system
+#     '''
+#
+#
+# #
+# class Integer(Typed):
+#     expected_type = int
+#
+#
+# class UnsignedInteger(Integer, Unsigned):
+#     pass
+#
+#
+# class Float(Typed):
+#     expected_type = float
+#
+#
+# class UnsignedFloat(Float, Unsigned):
+#     pass
+#
+#
+# class String(Typed):
+#     expected_type = str
+#
+#
+# class SizedString(String, MaxSized):
+#     pass
 
     '''
         Using these types, we can define our custom class
     '''
 
     # class Stock:
-    #     name = SizedString('name',size=8)
-    #     shares =UnsignedInteger('shares')
+    #     name = SizedString('name', size=8)
+    #     shares = UnsignedInteger('shares')
     #     price = UnsignedFloat('price')
     #
-    #     def __init__(self,name, shares, price):
+    #     def __init__(self, name, shares, price):
     #         self.name = name
     #         self.shares = shares
     #         self.price = price
-
-    # TODO: create some examples
 
     '''
         There are a few other ways to make specification limit for a class.
         One of them is to use decorator class
     '''
-    #
     # def check_attribute(**kwargs):
     #     def decorate(cls):
     #         for k, v in kwargs.items():
@@ -382,44 +379,44 @@ class SizedString(String, MaxSized):
         another example
     '''
 
-
-from collections import Sequence
-import bisect
-
-
-class SortedItem(Sequence):
-    def __init__(self, sequence=None):
-        self._items = sorted(sequence) if sequence is not None else []
-
-    def __getitem__(self, index):
-        return self._items[index]
-
-    def __len__(self):
-        return len(self._items)
-
-    def add(self, other):
-        bisect.insort(self._items, other)
-
-
-if __name__ == '__main__':
-    items = SortedItem([10, 43, 3])
-    print(list(items))
-    print('-' * 10)
-    print(items[0])
-    print('-' * 10)
-    print(items[-1])
-    print('-' * 10)
-    items.add(2)
-    print(list(items))
-    print('-' * 10)
-    print(items[1:4])
-    print('-' * 10)
-    print(3 in items)
-    print('-' * 10)
-    print(len(items))
-    print('-' * 10)
-    for i in items:
-        print(i)
+#
+# from collections import Sequence
+# import bisect
+#
+#
+# class SortedItem(Sequence):
+#     def __init__(self, sequence=None):
+#         self._items = sorted(sequence) if sequence is not None else []
+#
+#     def __getitem__(self, index):
+#         return self._items[index]
+#
+#     def __len__(self):
+#         return len(self._items)
+#
+#     def add(self, other):
+#         bisect.insort(self._items, other)
+#
+#
+# if __name__ == '__main__':
+#     items = SortedItem([10, 43, 3])
+#     print(list(items))
+#     print('-' * 10)
+#     print(items[0])
+#     print('-' * 10)
+#     print(items[-1])
+#     print('-' * 10)
+#     items.add(2)
+#     print(list(items))
+#     print('-' * 10)
+#     print(items[1:4])
+#     print('-' * 10)
+#     print(3 in items)
+#     print('-' * 10)
+#     print(len(items))
+#     print('-' * 10)
+#     for i in items:
+#         print(i)
 
     '''
         As you can see, example of SortedItem behaves like usual Sequence and supports all other operations
